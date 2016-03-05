@@ -1,0 +1,27 @@
+{
+  "name": "@safari137/url_shortener",
+  "version": "1.0.0",
+  "description": "Url Shortener Microservice",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/safari137/url_shortener.git"
+  },
+  "author": "David Dill",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/safari137/url_shortener/issues"
+  },
+  "homepage": "https://github.com/safari137/url_shortener#readme",
+  "dependencies": {
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "mongodb": "^2.1.7",
+    "mongoose": "^4.4.6",
+    "mongoose-auto-increment": "^5.0.1",
+    "valid-url": "^1.0.9"
+  }
+}
