@@ -4,6 +4,8 @@ var express         = require('express'),
     autoIncrement   = require('mongoose-auto-increment'),
     app             = express();
     
+    app.set('view engine', 'ejs');
+    
 // Database Setup
 var connection = mongoose.connect(process.env.MONGOLAB_URI);
 
@@ -18,6 +20,10 @@ var Url = connection.model('Url', urlSchema);
 
 
 // Routes
+
+app.get('/', function(req, res) {
+   res.render('home'); 
+});
         
 app.get('/create/*', function(req, res) {
     var url = req.url.substring(8);
