@@ -59,7 +59,7 @@ app.get('/:id', function(req, res) {
     var id = req.params.id;
     
     Url.find({_id: id}, function(err, foundUrl) {
-        if (err) { res.send(err);  return; }
+        if (err) { throw err }
         
         if (!foundUrl.length) {
             res.send({'error': 'Invalid shortcut'});
