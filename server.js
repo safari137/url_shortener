@@ -4,9 +4,8 @@ var express         = require('express'),
     autoIncrement   = require('mongoose-auto-increment'),
     app             = express();
     
-    
 // Database Setup
-var connection = mongoose.connect('mongodb://localhost/url_shortener');
+var connection = mongoose.connect(process.env.MONGOLAB_URI);
 
 autoIncrement.initialize(connection);
 
