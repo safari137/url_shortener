@@ -1,9 +1,37 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
+        <title>URL Shortener API</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">  
     </head>
     <body>
-        <h1>Welcome</h1>
+        <div class="container">
+            <h1>API Basejump: URL Shortener</h1>
+            
+            <blockquote>
+                User Stories:
+                <ul>
+                    <li>I can pass a URL as a parameter and I will receive a shortened URL in the JSON response.</li><br>
+                    <li>If I pass an invalid URL that doesn't follow the valid http://www.example.com format, the JSON response will contain an error instead.</li><br>
+                    <li>When I visit that shortened URL, it will redirect me to my original link.</li>
+                </ul>
+            </blockquote>
+            <hr>
+            <h3>Example creation usage:</h3>
+            <code><a href="https://polar-oasis-36239.herokuapp.com/create/https://www.google.com">https://polar-oasis-36239.herokuapp.com/create/https://www.google.com</a></code>
+            <br>
+            <code><a href="https://polar-oasis-36239.herokuapp.com/create/https://www.subway.com">https://polar-oasis-36239.herokuapp.com/create/https://www.subway.com</a></code>
+            <hr>
+            <h3>Example output:</h3>
+            <code>{"orininal_url":"https://www.google.com","short_url":"http://polar-oasis-36239.herokuapp.com/5"}</code>
+            <hr>
+            <h3>Usage</h3>
+            <code><a href="https://polar-oasis-36239.herokuapp.com/5">https://polar-oasis-36239.herokuapp.com/5</a></code>
+            <h3>Will redirect to:</h3>
+            <code><a href="https://www.google.com">https://www.google.com</a></code>
+            <hr>
+            <h3>Find the code at:</h3>
+            <a href="https://github.com/safari137/url_shortener">https://github.com/safari137/url_shortener</a>
+        </div>
     </body>
 </html>

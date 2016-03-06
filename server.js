@@ -2,6 +2,7 @@ var express         = require('express'),
     urlValidator    = require('valid-url'),
     mongoose        = require('mongoose'),
     autoIncrement   = require('mongoose-auto-increment'),
+    urlParser       = require('url'),
     app             = express();
     
     app.set('view engine', 'ejs');
@@ -27,31 +28,17 @@ app.get('/', function(req, res) {
         
 app.get('/create/*', function(req, res) {
     var url = req.url.substring(8);
-    var baseUrl = 'http://' + req.hostname + '/';
+    var baseUrl = 'https://' + req.hostname + '/';
     
-    var validatedUrl = urlValidator.isWebUri(url);
-    
-    if (validatedUrl === undefined) {
-        res.send({'error': 'url invalid'});
-        return;
-    } 
-    
-    Url.find({address: url}, function(err, foundUrl) {
-       if (err) throw err;
+    checkUrlValidation(url, function(result) {
+       if (!result) {
+           res.send({'error': 'url is invalid'});
+           return;
+       } 
        
-       if (!foundUrl.length) {
-           
-           var newUrl = new Url({address: url});
-           
-           newUrl.save(function(err, savedUrl) {
-              if (err) throw err;
-              
-              res.send({orininal_url: url, short_url: baseUrl + savedUrl._id});
-           });
-       } else {
-           foundUrl = foundUrl[0];
-           res.send({ orininal_url: foundUrl.address, short_url: baseUrl + foundUrl._id });
-       }
+       findOrCreateUrl(url, function(newUrlPath) {
+           res.send({orininal_url: url, short_url: baseUrl + newUrlPath});
+       });
     });
 });
 
@@ -59,7 +46,7 @@ app.get('/:id', function(req, res) {
     var id = req.params.id;
     
     Url.find({_id: id}, function(err, foundUrl) {
-        if (err) { res.send("error " + err) }
+        if (err) { console.log(err); return; }
         
         if (!foundUrl.length) {
             res.send({'error': 'Invalid shortcut'});
@@ -76,3 +63,50 @@ app.get('/:id', function(req, res) {
 app.listen(process.env.PORT, function() {
     console.log('server started...');
 });
+
+
+// Validate Url
+
+function checkUrlValidation(url, callback) {
+    var validatedUrl = urlValidator.isWebUri(url);
+    
+    if (validatedUrl === undefined)
+        return false;
+        
+    var http = require('http');
+    var urlObj = urlParser.parse(url);
+    var options = { method: 'HEAD', host: urlObj.hostname, port: 80, path: urlObj.pathname }; 
+
+    var req = http.request(options, (res) => {
+        callback(true);
+    });
+    
+    req.on('error', (e) => {
+        callback(false);
+    });
+
+    req.end();
+}
+
+// Find or Create URL in DB
+
+function findOrCreateUrl(url, callback) {
+    var newUrlPath = undefined;
+    
+    Url.find({address: url}, function(err, foundUrl) {
+       if (err) throw err;
+       
+       if (!foundUrl.length) {
+           var newUrl = new Url({address: url});
+                   
+           newUrl.save(function(err, savedUrl) {
+              if (err) throw err;
+              newUrlPath = savedUrl._id;
+              callback(newUrlPath)
+           });
+       } else {
+           newUrlPath = foundUrl[0]._id;
+           callback(newUrlPath);
+       }
+    });
+}
